@@ -1,0 +1,14 @@
+- name: create steam directory
+  file: 
+    path: /usr/share/steam 
+    state: directory
+  tags:
+    - steam
+
+- name: add steam user
+  user:
+    name: steam
+    home: /usr/share/steam
+  tags:
+    - steam
+       

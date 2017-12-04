@@ -1,0 +1,8 @@
+# helper to add variables when creating dowant instances
+- name: add testing variables
+  include_vars: "{{ item }}"
+  with_items:
+    - "group_vars/{{ aws_environment }}/main.yml"
+    - "group_vars/{{ aws_environment }}/vault.yml"
+  tags:
+    - aws-post

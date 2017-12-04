@@ -1,0 +1,38 @@
+- name: install nfs-client package
+  package: 
+    name: nfs-client
+    state: latest
+  tags:
+    - nfs
+
+- name: check if "{{ config_data_nfs_mountpoint }}" already exists
+  file:
+    dest: "{{ config_data_nfs_mountpoint }}"
+    state: "directory"
+    owner: "{{ steam_run_user }}"
+    group: "{{ steam_run_group }}"
+  tags:
+    - nfs
+
+# - name: mounts /data using give nfs path
+#  lineinfile: 
+#    dest: /etc/fstab
+#    line: "{{ item.endpoint }} {{ item.mountpoint }} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,_netdev 0 0"
+#    regexp: ".*{{ config_data_nfs_endpoint }}"
+#  with_items:
+#    - { 'mountpoint': "{{ config_data_nfs_mountpoint }}", 'endpoint': "{{ config_data_nfs_endpoint }}" }
+#  tags:
+#    - nfs
+
+- name: mount nfs filesystem
+  mount:
+    name: "{{ item.mountpoint }}"
+    src: "{{ item.endpoint }}"
+    fstype: nfs4
+    opts: nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,_netdev
+    state: mounted
+  with_items:
+    - { 'mountpoint': "{{ config_data_nfs_mountpoint }}", 'endpoint': "{{ config_data_nfs_endpoint }}" }
+  when: config_data_nfs_endpoint is defined
+  tags:
+    - nfs

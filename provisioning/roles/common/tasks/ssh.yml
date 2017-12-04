@@ -1,0 +1,5 @@
+---
+- name: adding "StrictHostKeyChecking no" to ssh_config
+  lineinfile: dest="/etc/ssh/ssh_config" line="\tStrictHostKeyChecking no" insertafter="GSSAPIDelegateCredentials"
+  tags:
+    - common

@@ -1,0 +1,21 @@
+# otherwise re-provisioning fails when fetching github dependencies
+- name: ensure ssh-agent is kept when sudoing
+  lineinfile: dest="{{ system_root[ansible_system] }}/etc/sudoers" line="Defaults        env_keep+=SSH_AUTH_SOCK"
+  tags:
+    - common
+
+- name: stops apt-daily utilities
+  become: true
+  become_user: root
+  shell: /bin/systemctl stop '{{ item }}'
+  items:
+    - apt-daily.service
+    - apt-daily.timer
+  tags:
+    - common
+
+- include: sysctl.yml
+- include: ssh.yml
+- include: aws.yml
+- include: users.yml
+- include: nfs.yml

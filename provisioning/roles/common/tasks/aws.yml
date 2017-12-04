@@ -1,0 +1,20 @@
+---
+- name: check if host is aws instance
+  shell: timeout 2 ec2metadata --instance-id
+  register: ec2metadata
+  ignore_errors: yes
+  tags:
+    - aws
+
+# ubuntu has ec2metadata, but with "unavailable" value
+- name: set aws hostname to instance-id
+  shell: ec2metadata --instance-id > /etc/hostname && hostname `cat /etc/hostname`
+  when: ec2metadata.rc == 0 and ec2metadata.stdout != 'unavailable'
+  tags:
+    - aws
+
+- name: appending instance hostname on /etc/hosts localhost entry
+  lineinfile: dest=/etc/hosts regexp="^(127.0.0.1.*localhost)"  line='\1 {{ ec2metadata.stdout }}' backrefs=yes
+  when: ec2metadata.rc == 0
+  tags:
+    - aws

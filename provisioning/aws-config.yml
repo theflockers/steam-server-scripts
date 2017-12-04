@@ -1,0 +1,25 @@
+---
+- name: adding the given hostname to aws_post_server group
+  hosts: local
+  gather_facts: false
+  tasks:
+    - name: add to group to run tasks
+      add_host: hostname={{ aws_server }} groupname=aws_post_server
+      tags:
+        - aws-post
+
+    - name: debug
+      debug: var=aws_server
+      tags: 
+        - aws-post
+
+# here it should have all roles and should be chosen by tags
+#
+- hosts:
+  - aws_post_server
+  become: true
+  gather_facts: true
+  roles:
+    - ec2
+    - common
+    - steam-server

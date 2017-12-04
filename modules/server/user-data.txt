@@ -1,0 +1,7 @@
+#cloud-config
+packages:
+ - unzip
+ - python
+ - dnsmasq
+ - lib32gcc1
+ - lib32stdc++6

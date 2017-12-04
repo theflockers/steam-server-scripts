@@ -1,0 +1,4 @@
+steam_run_user: steam
+steam_run_group: steam
+steam_install_dir: /usr/share/steam
+steam_games_dir: /games
